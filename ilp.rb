@@ -6,7 +6,8 @@ class ILP
     uri = URI uri
     uri.scheme == 'tcp' or raise "unhandled protocol"
 
-    db = uri.path&.sub %r{^/}, ""
+    db = uri.path.to_s.sub %r{^/}, ""
+    !db.empty? or raise "missing db as path"
     db !~ %r{/} or raise "nested paths not supported"
 
     opts = {}

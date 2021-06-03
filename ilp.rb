@@ -5,10 +5,7 @@ class ILP
   def self.connect(uri)
     uri = URI uri
     uri.scheme == 'tcp' or raise "unhandled protocol"
-
-    db = uri.path.to_s.sub %r{^/}, ""
-    !db.empty? or raise "missing db as path"
-    db !~ %r{/} or raise "nested paths not supported"
+    uri.path.to_s.sub(%r{^/}, "").empty? or raise "path is not used"
 
     opts = {}
     query = Hash[URI.decode_www_form uri.query || ""]
@@ -16,17 +13,17 @@ class ILP
     query.empty? or raise "unhandled query params: #{query.keys * ", "}"
 
     io = TCPSocket.new uri.host, uri.port
-    new io, db, **opts
+    new io, **opts
   end
 
-  def initialize(io, db, time_prec:)
+  def initialize(io, time_prec:)
     @io = io
-    @db = db
     @point_class = Class.new(Point).tap do |cls|
       cls.time_conv = TimeConv.new time_prec
     end
   end
 
+  attr_reader :io
   def time_conv = @point_class.time_conv
 
   def write_points(points)

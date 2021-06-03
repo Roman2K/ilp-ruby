@@ -49,7 +49,7 @@ class ILP
   class EmptyValuesError < Error; end
 
   class Point
-    def initialize(series:, tags:, values:, timestamp: nil)
+    def initialize(series:, tags: {}, values:, timestamp: nil)
       @series, @tags, @values, @timestamp = series, tags, values, timestamp
     end
 

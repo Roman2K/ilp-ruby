@@ -33,22 +33,22 @@ class PointTest < MiniTest::Test
     end
     assert_match /missing.+:series/, err.message
 
-    Point.new series: "aa", tags: {}, values: {}
+    Point.new series: "aa", values: {}
   end
 
   def test_to_s
-    pt = Point.new series: "aa", tags: {}, values: {}
+    pt = Point.new series: "aa", values: {}
     assert_raises EmptyValuesError do
       pt.to_s
     end
 
-    pt = Point.new series: "aa", tags: {}, values: {bb: 1}
+    pt = Point.new series: "aa", values: {bb: 1}
     assert_equal %{aa bb=1i}, pt.to_s
 
-    pt = Point.new series: "a a", tags: {}, values: {bb: 1}
+    pt = Point.new series: "a a", values: {bb: 1}
     assert_equal %{a\\ a bb=1i}, pt.to_s
 
-    pt = Point.new series: "a a", tags: {}, values: {bb: "xx"}
+    pt = Point.new series: "a a", values: {bb: "xx"}
     assert_equal %{a\\ a bb="xx"}, pt.to_s
 
     pt = Point.new series: "a", tags: {cc: "dd"}, values: {bb: 1.0}
@@ -56,7 +56,7 @@ class PointTest < MiniTest::Test
 
     pt = Class.new(Point).
       tap { _1.time_conv = TimeConv.new "ms" }.
-      new series: "a", tags: {}, values: {bb: 1.0}, timestamp: Time.at(1234)
+      new series: "a", values: {bb: 1.0}, timestamp: Time.at(1234)
     assert_equal %{a bb=1.0 1234000}, pt.to_s
   end
 end
